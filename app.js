@@ -22,7 +22,7 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-mongoose.connect("mongodb://localhost:27017/secretDB")
+mongoose.connect(`mongodb+srv://va-admin:${process.env.SECRET}@cluster0.gkfbx.mongodb.net/secretDB`)
 
 const secretSchema = new mongoose.Schema({
     content : String
