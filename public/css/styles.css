@@ -3,6 +3,10 @@ body {
   background-color: #E8ECEF;
 }
 
+.secretPage {
+  text-decoration: none !important;
+}
+
 .centered {
     padding-top: 200px;
     text-align: center;

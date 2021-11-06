@@ -24,12 +24,18 @@ app.use(passport.session())
 
 mongoose.connect("mongodb://localhost:27017/secretDB")
 
+const secretSchema = new mongoose.Schema({
+    content : String
+  });
 
-const User = mongoose.model("User", new mongoose.Schema({
+const Secret = new mongoose.model("Secret", secretSchema)
+
+const User = new mongoose.model("User", new mongoose.Schema({
     email: String,
     password: String,
     googleId: String,
-    facebookId: String
+    facebookId: String,
+    theirSecrets: [secretSchema]
 }).plugin(passportLocalMongoose).plugin(findOrCreate))
 
 passport.use(User.createStrategy())
@@ -95,6 +101,30 @@ app.get("/register", function(req, res){
     res.render("register")
 })
 
+app.get("/secrets", function(req, res){
+    User.find({theirSecrets: {$ne: null}}, function(err, foundUser){
+        if (!err){
+            res.render("secrets", {usersHavingSecrets: foundUser})
+        } else {
+            console.log(err)
+        }
+    })
+})
+
+app.get("/logout", function(req, res){
+    req.logout();
+    res.redirect("/");
+})
+
+app.get("/submit", function(req, res){
+    if (req.isAuthenticated()){
+        res.render("submit")
+    } else {
+        res.redirect("/login")
+    }
+    
+})
+
 app.post("/register", function(req, res){
    const {username, password} = req.body
 
@@ -117,24 +147,29 @@ app.post("/login",passport.authenticate("local", {
     successRedirect: "/secrets"
 }))
 
+app.post("/submit", function(req, res){
+    const yourSecret = req.body.secret;
+    const newSecret = new Secret({
+      content : yourSecret
+    })
+
+    User.findById(req.user.id, function(err, foundUser){
+        if (!err){
+            if (foundUser){
+                foundUser.theirSecrets.push(newSecret)
+                foundUser.save(function(err){
+                    if (!err){
+                        res.redirect("/secrets")
+                    }
+                })
+            }
+        }
+    })
+})
+
+
     
 
-app.get("/secrets", function(req, res){
-    res.set(
-        'Cache-Control', 
-        'no-cache, private, no-store, must-revalidate, max-stal e=0, post-check=0, pre-check=0'
-    );
-    if (req.isAuthenticated()){
-        res.render("secrets")
-    } else {
-        res.redirect("/login")
-    }
-})
-
-app.get("/logout", function(req, res){
-    req.logout();
-    res.redirect("/");
-})
 
 
 let port = process.env.PORT
