@@ -1,7 +1,7 @@
 # SecretsApp
 
 ## General info
-This project is the answer for technical test at dumbways.
+This project is whisper clone, user can submit their secret and also could see others secrets.
 	
 ## Technologies
 Project is created with:
