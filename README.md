@@ -5,7 +5,6 @@ This project is whisper clone, user can submit their secret and also could see o
 	
 ## Technologies
 Project is created with:
-* Javascript
 * Node.js
 * Express
 * Mongoose
