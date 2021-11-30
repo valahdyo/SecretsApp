@@ -18,4 +18,4 @@ $ npm install
 $ npm app.js
 ```
 
-Or, if you are lazy person (just like me :D) you can see my project at: https://secretsappva.herokuapp.com/
+Or, you can see my project at: https://secretsappva.herokuapp.com/
